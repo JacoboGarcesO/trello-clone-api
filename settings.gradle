@@ -1,0 +1,9 @@
+rootProject.name = 'clone'
+
+// INCLUDES
+include ':model'
+
+// LOCATIONS
+project(':model').projectDir = file('/src/domain/model')
+
+
