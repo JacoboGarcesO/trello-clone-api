@@ -12,9 +12,8 @@ public abstract class DomainEvent implements Serializable {
   private String aggregateName;
   private Long version;
 
-  protected DomainEvent(final String type, final String aggregateName){
+  protected DomainEvent(final String type){
     this.type = type;
-    this.aggregateName = aggregateName;
     this.when = Instant.now();
     this.uuid = UUID.randomUUID();
     this.version = 1L;

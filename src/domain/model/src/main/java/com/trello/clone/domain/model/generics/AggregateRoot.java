@@ -2,7 +2,7 @@ package com.trello.clone.domain.model.generics;
 
 import java.util.List;
 
-public class AggregateRoot <I extends Identity> extends Entity<I> {
+public abstract class AggregateRoot <I extends Identity> extends Entity<I> {
   private final DomainActionsHandler actionsHandler = new DomainActionsHandler();
 
   protected AggregateRoot(final I identity) {

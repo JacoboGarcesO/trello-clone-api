@@ -30,13 +30,15 @@ public class DomainActionsHandler {
   private void handle(final DomainEvent event, final Consumer<? super DomainEvent> action) {
     try {
       action.accept(event);
-      increaseVersion(event);
+      long newVersion = increaseVersion(event);
+      event.setVersion(newVersion);
     } catch (ClassCastException  ignored) { }
   }
 
-  private void increaseVersion(final DomainEvent event) {
+  private long increaseVersion(final DomainEvent event) {
     final AtomicLong version = versions.get(event.getType());
     final long newVersion = version == null ? event.getVersion() : version.incrementAndGet();
     versions.put(event.getType(), new AtomicLong(newVersion));
+    return newVersion;
   }
 }

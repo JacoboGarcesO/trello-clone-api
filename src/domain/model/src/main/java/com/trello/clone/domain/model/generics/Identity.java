@@ -5,16 +5,12 @@ import java.util.UUID;
 public class Identity implements IValueObject<String> {
 	private final String value;
 
-	public Identity() {
+	protected Identity() {
 		this.value = UUID.randomUUID().toString();
 	}
 
-  private Identity(final String value) {
+  protected Identity(final String value) {
     this.value = value;
-  }
-
-  public static Identity of(final String value) {
-    return new Identity(value);
   }
 
 	@Override
