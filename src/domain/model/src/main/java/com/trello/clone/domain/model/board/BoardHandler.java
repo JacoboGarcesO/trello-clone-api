@@ -1,13 +1,20 @@
 package com.trello.clone.domain.model.board;
 
-import com.trello.clone.domain.model.board.events.*;
-import com.trello.clone.domain.model.board.values.*;
+import com.trello.clone.domain.model.board.events.BoardCreated;
+import com.trello.clone.domain.model.board.events.ColumnAdded;
+import com.trello.clone.domain.model.board.events.OwnerAdded;
+import com.trello.clone.domain.model.board.events.StatusChanged;
+import com.trello.clone.domain.model.board.events.TodoCreated;
+import com.trello.clone.domain.model.board.values.Description;
+import com.trello.clone.domain.model.board.values.Name;
+import com.trello.clone.domain.model.board.values.Owner;
+import com.trello.clone.domain.model.board.values.Status;
+import com.trello.clone.domain.model.board.values.TodoId;
 import com.trello.clone.domain.model.generics.DomainActionsContainer;
 import com.trello.clone.domain.model.generics.DomainEvent;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class BoardHandler extends DomainActionsContainer {
@@ -29,18 +36,7 @@ public class BoardHandler extends DomainActionsContainer {
 
   private Consumer<? extends DomainEvent> addColumn(final Board board) {
     return (ColumnAdded event) -> {
-      if (event.getIndex() < 0) {
-        throw new IllegalStateException("Column index must be greater than 0");
-      }
-
-      if (board.getColumns().containsKey(event.getIndex())) {
-        throw new IllegalStateException("This column already exists");
-      }
-
-      if (board.getColumns().get(event.getIndex()) != null) {
-        throw new IllegalStateException("This column already exists");
-      }
-
+      board.validateIndex(event.getIndex());
       board.getColumns().put(event.getIndex(), Status.of(event.getName()));
     };
   }
@@ -60,33 +56,20 @@ public class BoardHandler extends DomainActionsContainer {
 
   private Consumer<? extends DomainEvent> addOwner(final Board board) {
     return (OwnerAdded event) -> {
-      Optional<Todo> todo = board.getTodos().stream().filter(t -> t.getIdentity().equals(TodoId.of(event.getTodoId()))).findFirst();
-
-      if (todo.isEmpty()) {
-        throw new IllegalStateException("This todo does not exist");
-      }
-
-      board.getTodos().remove(todo.get());
-      Todo newTodo = new Todo(todo.get().getIdentity(), todo.get().getTitle(), todo.get().getDescription(), todo.get().getStatus());
-      newTodo.addOwner(new Owner(new OwnerId(), Name.of(event.getName()), Email.of(event.getEmail())));
+      Todo todo = board.getTodo(event.getTodoId());
+      board.getTodos().remove(todo);
+      Todo newTodo = new Todo(todo.getIdentity(), todo.getTitle(), todo.getDescription(), todo.getStatus(), todo.getOwners());
+      newTodo.addOwner(Owner.of(event.getName(), event.getEmail()));
       board.getTodos().add(newTodo);
     };
   }
 
   private Consumer<? extends DomainEvent> changeStatus(final Board board) {
     return (StatusChanged event) -> {
-      if (board.getColumns().values().stream().noneMatch(s -> s.getValue().equals(event.getStatus()))) {
-        throw new IllegalStateException("This status does not exist");
-      }
-
-      Optional<Todo> todo = board.getTodos().stream().filter(t -> t.getIdentity().equals(TodoId.of(event.getTodoId()))).findFirst();
-
-      if (todo.isEmpty()) {
-        throw new IllegalStateException("This todo does not exist");
-      }
-
-      board.getTodos().remove(todo.get());
-      Todo newTodo = new Todo(todo.get().getIdentity(), todo.get().getTitle(), todo.get().getDescription(), Status.of(event.getStatus()));
+      board.validateStatus(event.getStatus());
+      Todo todo = board.getTodo(event.getTodoId());
+      board.getTodos().remove(todo);
+      Todo newTodo = new Todo(todo.getIdentity(), todo.getTitle(), todo.getDescription(), Status.of(event.getStatus()));
       board.getTodos().add(newTodo);
     };
   }

@@ -2,6 +2,7 @@ package com.trello.clone.domain.model.board;
 
 import com.trello.clone.domain.model.board.values.Description;
 import com.trello.clone.domain.model.board.values.Name;
+import com.trello.clone.domain.model.board.values.Owner;
 import com.trello.clone.domain.model.board.values.Status;
 import com.trello.clone.domain.model.board.values.TodoId;
 import com.trello.clone.domain.model.generics.Entity;
@@ -23,6 +24,14 @@ public class Todo extends Entity<TodoId> {
     this.owners = new LinkedList<>();
   }
 
+  public Todo(TodoId identity, Name title, Description description, Status status, List<Owner> owners) {
+    super(identity);
+    this.title = title;
+    this.description = description;
+    this.status = status;
+    this.owners = owners;
+  }
+
   public Name getTitle() {
     return title;
   }
@@ -39,7 +48,7 @@ public class Todo extends Entity<TodoId> {
     return owners;
   }
 
-  public Todo addOwner(Owner owner) {
+  public void addOwner(Owner owner) {
     if (this.owners.size() > 2) {
       throw new IllegalStateException("A todo can only have 3 owners");
     }
@@ -49,14 +58,12 @@ public class Todo extends Entity<TodoId> {
     }
 
     this.owners.add(owner);
-    return this;
   }
 
   private boolean matchOwner(Owner owner) {
     return this.owners.stream().anyMatch(o ->
-      o.getIdentity().equals(owner.getIdentity())
-        || o.getName().getValue().equals(owner.getName().getValue())
-        || o.getEmail().getValue().equals(owner.getEmail().getValue())
+      o.getValue().containsValue(owner.getValue().get(Owner.Fields.NAME.name()))
+        || o.getValue().containsValue(owner.getValue().get(Owner.Fields.EMAIL.name()))
     );
   }
 }

@@ -8,11 +8,13 @@ import com.trello.clone.domain.model.board.events.BoardCreated;
 import com.trello.clone.domain.model.board.values.Name;
 import com.trello.clone.domain.model.board.values.BoardId;
 import com.trello.clone.domain.model.board.values.Status;
+import com.trello.clone.domain.model.board.values.TodoId;
 import com.trello.clone.domain.model.generics.AggregateRoot;
 import com.trello.clone.domain.model.generics.DomainEvent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class Board extends AggregateRoot<BoardId> {
@@ -37,20 +39,50 @@ public class Board extends AggregateRoot<BoardId> {
     return board;
   }
 
-  private void addColumn(final String name, final Integer index) {
+  public void addColumn(final String name, final Integer index) {
     append(new ColumnAdded(name, index)).apply();
   }
 
-  private void addTodo(final String title, final String description) {
+  public void addTodo(final String title, final String description) {
     append(new TodoCreated(title, description)).apply();
   }
 
-  private void addOwner(final String name, final String email, final String todoId) {
+  public void addOwner(final String name, final String email, final String todoId) {
     append(new OwnerAdded(name, email, todoId)).apply();
   }
 
-  private void changeStatus(final String status, final String todoId) {
+  public void changeStatus(final String status, final String todoId) {
     append(new StatusChanged(status, todoId)).apply();
+  }
+
+  public void validateIndex(final Integer index) {
+    if (index < 0) {
+      throw new IllegalStateException("Column index must be greater than 0");
+    }
+
+    if (getColumns().containsKey(index)) {
+      throw new IllegalStateException("This column already exists");
+    }
+
+    if (getColumns().get(index) != null) {
+      throw new IllegalStateException("This column already exists");
+    }
+  }
+
+  public Todo getTodo(final String todoId) {
+    Optional<Todo> todo = getTodos().stream().filter(t -> t.getIdentity().equals(TodoId.of(todoId))).findFirst();
+
+    if (todo.isEmpty()) {
+      throw new IllegalStateException("This todo does not exist");
+    }
+
+    return todo.get();
+  }
+
+  public void validateStatus(final String status) {
+    if (getColumns().values().stream().noneMatch(s -> s.getValue().equals(status))) {
+      throw new IllegalStateException("This status does not exist");
+    }
   }
 
   public Name getName() {
