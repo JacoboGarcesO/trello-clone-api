@@ -1,7 +1,7 @@
-package com.trello.clone.domain.model.todo.events;
+package com.trello.clone.domain.model.board.events;
 
 import com.trello.clone.domain.model.generics.DomainEvent;
-import com.trello.clone.domain.model.todo.events.enums.EventsEnum;
+import com.trello.clone.domain.model.board.events.enums.EventsEnum;
 
 public class TodoCreated extends DomainEvent {
   private final String title;

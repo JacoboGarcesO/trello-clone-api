@@ -1,4 +1,4 @@
-package com.trello.clone.domain.model.todo.values;
+package com.trello.clone.domain.model.board.values;
 
 import com.trello.clone.domain.model.generics.Identity;
 

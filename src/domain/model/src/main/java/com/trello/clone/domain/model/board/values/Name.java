@@ -1,16 +1,16 @@
-package com.trello.clone.domain.model.todo.values;
+package com.trello.clone.domain.model.board.values;
 
 import com.trello.clone.domain.model.generics.IValueObject;
 
-public class Description implements IValueObject<String> {
+public class Name implements IValueObject<String> {
   private final String value;
 
-  private Description(final String value) {
+  private Name(final String value) {
     this.value = validate(value.trim());
   }
 
-  public static Description of(final String value) {
-    return new Description(value);
+  public static Name of(final String value) {
+    return new Name(value);
   }
 
   @Override
@@ -24,7 +24,7 @@ public class Description implements IValueObject<String> {
     }
 
     if (value.length() > 100) {
-      throw new IllegalArgumentException("Name cannot be longer than 1000 characters");
+      throw new IllegalArgumentException("Name cannot be longer than 100 characters");
     }
 
     if (!value.matches("[a-zA-Z0-9\\s]+")) {

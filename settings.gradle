@@ -2,8 +2,8 @@ rootProject.name = 'clone'
 
 // INCLUDES
 include ':model'
+include ':usecases'
 
 // LOCATIONS
 project(':model').projectDir = file('/src/domain/model')
-
-
+project(':usecases').projectDir = file('/src/domain/usecases')

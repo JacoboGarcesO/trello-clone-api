@@ -2,7 +2,7 @@ package com.trello.clone.domain.model.generics;
 
 import java.util.UUID;
 
-public class Identity implements IValueObject<String> {
+public abstract class Identity implements IValueObject<String> {
 	private final String value;
 
 	protected Identity() {
