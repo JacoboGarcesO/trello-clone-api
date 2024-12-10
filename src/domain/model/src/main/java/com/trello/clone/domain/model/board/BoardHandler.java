@@ -75,6 +75,10 @@ public class BoardHandler extends DomainActionsContainer {
 
   private Consumer<? extends DomainEvent> changeStatus(final Board board) {
     return (StatusChanged event) -> {
+      if (board.getColumns().values().stream().noneMatch(s -> s.getValue().equals(event.getStatus()))) {
+        throw new IllegalStateException("This status does not exist");
+      }
+
       Optional<Todo> todo = board.getTodos().stream().filter(t -> t.getIdentity().equals(TodoId.of(event.getTodoId()))).findFirst();
 
       if (todo.isEmpty()) {
