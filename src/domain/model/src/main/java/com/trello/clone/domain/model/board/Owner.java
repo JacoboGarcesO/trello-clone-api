@@ -1,17 +1,13 @@
-package com.trello.clone.domain.model.todo;
+package com.trello.clone.domain.model.board;
 
 import com.trello.clone.domain.model.generics.Entity;
-import com.trello.clone.domain.model.todo.values.Email;
-import com.trello.clone.domain.model.todo.values.Name;
-import com.trello.clone.domain.model.todo.values.OwnerId;
+import com.trello.clone.domain.model.board.values.Email;
+import com.trello.clone.domain.model.board.values.Name;
+import com.trello.clone.domain.model.board.values.OwnerId;
 
 public class Owner extends Entity<OwnerId> {
-  private Name name;
-  private Email email;
-
-  protected Owner(OwnerId identity) {
-    super(identity);
-  }
+  private final Name name;
+  private final Email email;
 
   protected Owner(OwnerId identity, Name name, Email email) {
     super(identity);

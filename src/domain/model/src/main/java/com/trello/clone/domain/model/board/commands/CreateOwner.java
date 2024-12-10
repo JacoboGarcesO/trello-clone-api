@@ -1,7 +1,7 @@
-package com.trello.clone.domain.model.todo.commands;
+package com.trello.clone.domain.model.board.commands;
 
 import com.trello.clone.domain.model.generics.Command;
-import com.trello.clone.domain.model.todo.values.TodoId;
+import com.trello.clone.domain.model.board.values.TodoId;
 
 public class CreateOwner extends Command<TodoId> {
   private final String name;
