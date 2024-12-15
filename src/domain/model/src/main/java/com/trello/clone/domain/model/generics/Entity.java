@@ -10,9 +10,4 @@ public abstract class Entity<I extends Identity> {
   public I getIdentity() {
     return identity;
   }
-
-  @Override
-  public boolean equals(Object o) {
-    return identity.equals(o);
-  }
 }

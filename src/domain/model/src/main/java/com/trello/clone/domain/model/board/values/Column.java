@@ -7,19 +7,19 @@ import static com.trello.clone.domain.model.board.values.Validator.validateIfIsE
 import static com.trello.clone.domain.model.board.values.Validator.validateMaxLength;
 import static com.trello.clone.domain.model.board.values.Validator.validateMinLength;
 
-public class Description implements IValueObject<String> {
+public class Column implements IValueObject<String> {
   private final String value;
 
-  private Description(final String value) {
-    this.value = validate(value.trim());
+  private Column(final String value) {
+    this.value = validate(value);
   }
 
-  public static Description of(final String value) {
-    return new Description(value);
+  public static Column of(final String value) {
+    return new Column(value);
   }
 
   @Override
-  public final String getValue() {
+  public String getValue() {
     return value;
   }
 
@@ -30,4 +30,6 @@ public class Description implements IValueObject<String> {
     validateMinLength(value);
     return value;
   }
+
+
 }

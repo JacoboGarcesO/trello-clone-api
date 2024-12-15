@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-public abstract class DomainActionsHandler {
+public class DomainActionsHandler {
   private final List<DomainEvent> events = new LinkedList<>();
   private final Map<String, AtomicLong> versions = new ConcurrentHashMap<>();
   private final Set<Consumer<? super DomainEvent>> actions = new HashSet<>();
@@ -32,7 +32,7 @@ public abstract class DomainActionsHandler {
       action.accept(event);
       long newVersion = increaseVersion(event);
       event.setVersion(newVersion);
-    } catch (ClassCastException  ignored) { }
+    } catch (ClassCastException ignored) { }
   }
 
   private long increaseVersion(final DomainEvent event) {

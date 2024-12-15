@@ -2,6 +2,11 @@ package com.trello.clone.domain.model.board.values;
 
 import com.trello.clone.domain.model.generics.IValueObject;
 
+import static com.trello.clone.domain.model.board.values.Validator.validateFormat;
+import static com.trello.clone.domain.model.board.values.Validator.validateIfIsEmpty;
+import static com.trello.clone.domain.model.board.values.Validator.validateMaxLength;
+import static com.trello.clone.domain.model.board.values.Validator.validateMinLength;
+
 public class Name implements IValueObject<String> {
   private final String value;
 
@@ -19,22 +24,10 @@ public class Name implements IValueObject<String> {
   }
 
   private String validate(final String value) {
-    if (value == null || value.isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be empty");
-    }
-
-    if (value.length() > 100) {
-      throw new IllegalArgumentException("Name cannot be longer than 100 characters");
-    }
-
-    if (!value.matches("[a-zA-Z0-9\\s]+")) {
-      throw new IllegalArgumentException("Name can only contain alphanumeric characters and spaces");
-    }
-
-    if (value.length() < 3) {
-      throw new IllegalArgumentException("Name must be at least 3 characters long");
-    }
-
+    validateIfIsEmpty(value);
+    validateMaxLength(value);
+    validateFormat(value);
+    validateMinLength(value);
     return value;
   }
 }
