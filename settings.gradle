@@ -1,7 +1,10 @@
 rootProject.name = 'clone'
 
 // INCLUDES
-include ':model'
+include ':domain'
+include ':application'
 
 // LOCATIONS
-project(':model').projectDir = file('/src/domain/model')
+project(':domain').projectDir = file('/src/domain')
+project(':application').projectDir = file('/src/application')
+
