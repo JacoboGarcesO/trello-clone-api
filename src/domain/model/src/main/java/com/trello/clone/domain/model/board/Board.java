@@ -1,13 +1,13 @@
 package com.trello.clone.domain.model.board;
 
+import com.trello.clone.domain.model.board.events.BoardCreated;
 import com.trello.clone.domain.model.board.events.ColumnAdded;
-import com.trello.clone.domain.model.board.events.TodoCreated;
 import com.trello.clone.domain.model.board.events.OwnerAdded;
 import com.trello.clone.domain.model.board.events.StatusChanged;
-import com.trello.clone.domain.model.board.events.BoardCreated;
-import com.trello.clone.domain.model.board.values.Name;
+import com.trello.clone.domain.model.board.events.TodoCreated;
 import com.trello.clone.domain.model.board.values.BoardId;
-import com.trello.clone.domain.model.board.values.Status;
+import com.trello.clone.domain.model.board.values.Name;
+import com.trello.clone.domain.model.board.values.Column;
 import com.trello.clone.domain.model.board.values.TodoId;
 import com.trello.clone.domain.model.generics.AggregateRoot;
 import com.trello.clone.domain.model.generics.DomainEvent;
@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 public class Board extends AggregateRoot<BoardId> {
   private Name name;
-  private Map<Integer, Status> columns;
+  private Map<Integer, Column> columns;
   private List<Todo> todos;
 
+  // region Constructors
   public Board(final String name) {
     super(new BoardId());
     subscribe(new BoardHandler(this));
@@ -32,13 +32,35 @@ public class Board extends AggregateRoot<BoardId> {
     super(identity);
     subscribe(new BoardHandler(this));
   }
+  // endregion
 
-  public static Board from(final BoardId identity, final List<DomainEvent> events) {
-    Board board = new Board(identity);
-    events.forEach(board::append);
-    return board;
+  // region Getters and Setters
+  public Name getName() {
+    return name;
   }
 
+  public void setName(Name name) {
+    this.name = name;
+  }
+
+  public Map<Integer, Column> getColumns() {
+    return columns;
+  }
+
+  public void setColumns(Map<Integer, Column> columns) {
+    this.columns = columns;
+  }
+
+  public List<Todo> getTodos() {
+    return todos;
+  }
+
+  public void setTodos(List<Todo> todos) {
+    this.todos = todos;
+  }
+  // endregion
+
+  // region Domain Actions
   public void addColumn(final String name, final Integer index) {
     append(new ColumnAdded(name, index)).apply();
   }
@@ -54,23 +76,16 @@ public class Board extends AggregateRoot<BoardId> {
   public void changeStatus(final String status, final String todoId) {
     append(new StatusChanged(status, todoId)).apply();
   }
+  // endregion
 
+  // region Public Methods
   public void validateIndex(final Integer index) {
-    if (index < 0) {
-      throw new IllegalStateException("Column index must be greater than 0");
-    }
-
-    if (getColumns().containsKey(index)) {
-      throw new IllegalStateException("This column already exists");
-    }
-
-    if (getColumns().get(index) != null) {
-      throw new IllegalStateException("This column already exists");
-    }
+    validateNegativity(index);
+    validateIfExists(index);
   }
 
   public Todo getTodo(final String todoId) {
-    Optional<Todo> todo = getTodos().stream().filter(t -> t.getIdentity().equals(TodoId.of(todoId))).findFirst();
+    final Optional<Todo> todo = todos.stream().filter(item -> item.getIdentity().equals(TodoId.of(todoId))).findFirst();
 
     if (todo.isEmpty()) {
       throw new IllegalStateException("This todo does not exist");
@@ -79,33 +94,64 @@ public class Board extends AggregateRoot<BoardId> {
     return todo.get();
   }
 
-  public void validateStatus(final String status) {
-    if (getColumns().values().stream().noneMatch(s -> s.getValue().equals(status))) {
-      throw new IllegalStateException("This status does not exist");
+  public void validateColumMatches(final String column) {
+    final boolean isValidColumn = isColumnExist(column);
+
+    if (!isValidColumn) {
+      throw new IllegalStateException("This column does not exist on this board");
     }
   }
 
-  public Name getName() {
-    return name;
+  public void validateColumDoesNotMatch(final String column) {
+    final boolean isColumnDuplicated = isColumnExist(column);
+
+    if (isColumnDuplicated) {
+      throw new IllegalStateException("This column is duplicated");
+    }
   }
 
-  public void setName(Name name) {
-    this.name = name;
+  public void validateColumnsExist() {
+    if (columns.isEmpty()) {
+      throw new IllegalStateException("This board does not have any column to add a todo");
+    }
   }
 
-  public Map<Integer, Status> getColumns() {
-    return columns;
+  public void validateTodoDuplicated(final String title) {
+    final boolean isTodoDuplicated = todos.stream().anyMatch(item -> item.getTitle().getValue().equals(title));
+
+    if (isTodoDuplicated) {
+      throw new IllegalStateException("This todo is duplicated");
+    }
+  }
+  // endregion
+
+  // region Private Methods
+  private void validateIfExists(Integer index) {
+    if (columns.containsKey(index)) {
+      throw new IllegalStateException("This column already exists");
+    }
   }
 
-  public void setColumns(Map<Integer, Status> columns) {
-    this.columns = columns;
+  private void validateNegativity(Integer index) {
+    if (index < 0) {
+      throw new IllegalStateException("Column index must be greater than 0");
+    }
   }
 
-  public List<Todo> getTodos() {
-    return todos;
+  private boolean isColumnExist(final String column) {
+    return columns.values().stream().anyMatch(item -> item.getValue().equals(column));
   }
+  // endregion
 
-  public void setTodos(List<Todo> todos) {
-    this.todos = todos;
+  // region Static Methods
+  public static Board from(final String identity, final List<DomainEvent> events) {
+    if (events == null || events.isEmpty()) {
+      throw new IllegalStateException("The events cannot be null or empty");
+    }
+
+    Board board = new Board(BoardId.of(identity));
+    events.forEach(event -> board.append(event).apply());
+    return board;
   }
+  // endregion
 }

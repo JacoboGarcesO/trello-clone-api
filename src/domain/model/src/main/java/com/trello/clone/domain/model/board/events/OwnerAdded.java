@@ -8,7 +8,7 @@ public class OwnerAdded extends DomainEvent {
   private final String name;
   private final String email;
 
-  public OwnerAdded(String todoId, final String name, final String email) {
+  public OwnerAdded(final String name, final String email, String todoId) {
     super(EventsEnum.OWNER_CREATED.name());
     this.todoId = todoId;
     this.name = name;

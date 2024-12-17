@@ -3,7 +3,7 @@ package com.trello.clone.domain.model.board;
 import com.trello.clone.domain.model.board.values.Description;
 import com.trello.clone.domain.model.board.values.Name;
 import com.trello.clone.domain.model.board.values.Owner;
-import com.trello.clone.domain.model.board.values.Status;
+import com.trello.clone.domain.model.board.values.Column;
 import com.trello.clone.domain.model.board.values.TodoId;
 import com.trello.clone.domain.model.generics.Entity;
 
@@ -13,22 +13,22 @@ import java.util.List;
 public class Todo extends Entity<TodoId> {
   private final Name title;
   private final Description description;
-  private final Status status;
+  private final Column column;
   private final List<Owner> owners;
 
-  public Todo(TodoId identity, Name title, Description description, Status status) {
+  public Todo(TodoId identity, Name title, Description description, Column column) {
     super(identity);
     this.title = title;
     this.description = description;
-    this.status = status;
+    this.column = column;
     this.owners = new LinkedList<>();
   }
 
-  public Todo(TodoId identity, Name title, Description description, Status status, List<Owner> owners) {
+  public Todo(TodoId identity, Name title, Description description, Column column, List<Owner> owners) {
     super(identity);
     this.title = title;
     this.description = description;
-    this.status = status;
+    this.column = column;
     this.owners = owners;
   }
 
@@ -40,8 +40,8 @@ public class Todo extends Entity<TodoId> {
     return description;
   }
 
-  public Status getStatus() {
-    return status;
+  public Column getStatus() {
+    return column;
   }
 
   public List<Owner> getOwners() {
@@ -49,7 +49,7 @@ public class Todo extends Entity<TodoId> {
   }
 
   public void addOwner(Owner owner) {
-    if (this.owners.size() > 2) {
+    if (this.owners.size() >= 2) {
       throw new IllegalStateException("A todo can only have 3 owners");
     }
 
