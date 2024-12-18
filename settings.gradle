@@ -1,10 +1,12 @@
-rootProject.name = 'clone'
+rootProject.name = 'trello-clone-api'
 
-// INCLUDES
-include ':domain'
-include ':application'
+include ':board:application'
+include ':board:domain'
+include ':shared:domain'
 
-// LOCATIONS
-project(':domain').projectDir = file('/src/domain')
-project(':application').projectDir = file('/src/application')
+
+project(':board:application').projectDir = file('./src/board/src/application')
+project(':board:domain').projectDir = file('./src/board/src/domain')
+project(':shared:domain').projectDir = file('./src/shared/src/domain')
+
 
