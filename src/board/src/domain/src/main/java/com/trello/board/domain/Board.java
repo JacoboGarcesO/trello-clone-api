@@ -3,7 +3,7 @@ package com.trello.board.domain;
 import com.trello.board.domain.events.BoardCreated;
 import com.trello.board.domain.events.ColumnAdded;
 import com.trello.board.domain.events.OwnerAdded;
-import com.trello.board.domain.events.StatusChanged;
+import com.trello.board.domain.events.ColumnChanged;
 import com.trello.board.domain.events.TodoCreated;
 import com.trello.board.domain.values.BoardId;
 import com.trello.board.domain.values.Column;
@@ -74,7 +74,7 @@ public class Board extends AggregateRoot<BoardId> {
   }
 
   public void changeStatus(final String status, final String todoId) {
-    append(new StatusChanged(status, todoId)).apply();
+    append(new ColumnChanged(status, todoId)).apply();
   }
   // endregion
 

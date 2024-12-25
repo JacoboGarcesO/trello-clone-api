@@ -3,10 +3,12 @@ rootProject.name = 'trello-clone-api'
 include ':board:application'
 include ':board:domain'
 include ':shared:domain'
+include ':shared:application'
 
 
 project(':board:application').projectDir = file('./src/board/src/application')
 project(':board:domain').projectDir = file('./src/board/src/domain')
 project(':shared:domain').projectDir = file('./src/shared/src/domain')
+project(':shared:application').projectDir = file('./src/shared/src/application')
 
 

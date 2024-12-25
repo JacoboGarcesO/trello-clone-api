@@ -3,7 +3,7 @@ package com.trello.board.domain;
 import com.trello.board.domain.events.BoardCreated;
 import com.trello.board.domain.events.ColumnAdded;
 import com.trello.board.domain.events.OwnerAdded;
-import com.trello.board.domain.events.StatusChanged;
+import com.trello.board.domain.events.ColumnChanged;
 import com.trello.board.domain.events.TodoCreated;
 import com.trello.board.domain.values.Column;
 import com.trello.board.domain.values.Description;
@@ -23,7 +23,7 @@ public class BoardHandler extends DomainActionsContainer {
     add(addColumn(board));
     add(addTodo(board));
     add(addOwner(board));
-    add(changeStatus(board));
+    add(changeColumn(board));
   }
 
   private Consumer<? extends DomainEvent> createBoard(final Board board) {
@@ -68,12 +68,12 @@ public class BoardHandler extends DomainActionsContainer {
     };
   }
 
-  private Consumer<? extends DomainEvent> changeStatus(final Board board) {
-    return (StatusChanged event) -> {
-      board.validateColumMatches(event.getStatus());
+  private Consumer<? extends DomainEvent> changeColumn(final Board board) {
+    return (ColumnChanged event) -> {
+      board.validateColumMatches(event.getColumn());
       final Todo todo = board.getTodo(event.getTodoId());
       board.getTodos().removeIf(t -> t.getIdentity().equals(todo.getIdentity()));
-      final Todo newTodo = new Todo(todo.getIdentity(), todo.getTitle(), todo.getDescription(), Column.of(event.getStatus()));
+      final Todo newTodo = new Todo(todo.getIdentity(), todo.getTitle(), todo.getDescription(), Column.of(event.getColumn()));
       board.getTodos().add(newTodo);
     };
   }

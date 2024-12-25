@@ -3,7 +3,7 @@ package com.trello.board.domain;
 import com.trello.board.domain.events.BoardCreated;
 import com.trello.board.domain.events.ColumnAdded;
 import com.trello.board.domain.events.OwnerAdded;
-import com.trello.board.domain.events.StatusChanged;
+import com.trello.board.domain.events.ColumnChanged;
 import com.trello.board.domain.events.TodoCreated;
 import com.trello.board.domain.values.Owner;
 import com.trello.shared.domain.generic.DomainEvent;
@@ -163,7 +163,7 @@ class BoardTest {
     board.changeStatus("Doing", board.getTodos().get(0).getIdentity().getValue());
     assertEquals(1, board.getTodos().size());
     assertEquals(5, board.getUncommittedEvents().size());
-    assertInstanceOf(StatusChanged.class, board.getUncommittedEvents().get(4));
+    assertInstanceOf(ColumnChanged.class, board.getUncommittedEvents().get(4));
   }
 
   @Test
@@ -174,7 +174,7 @@ class BoardTest {
     assertThrows(IllegalStateException.class, () -> board.changeStatus("Done", board.getTodos().get(0).getIdentity().getValue()));
     assertEquals(1, board.getTodos().size());
     assertEquals(5, board.getUncommittedEvents().size());
-    assertInstanceOf(StatusChanged.class, board.getUncommittedEvents().get(4));
+    assertInstanceOf(ColumnChanged.class, board.getUncommittedEvents().get(4));
   }
 
   @Test
