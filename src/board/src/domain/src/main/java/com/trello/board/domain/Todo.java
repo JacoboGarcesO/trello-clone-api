@@ -61,9 +61,6 @@ public class Todo extends Entity<TodoId> {
   }
 
   private boolean matchOwner(Owner owner) {
-    return this.owners.stream().anyMatch(o ->
-      o.getValue().containsValue(owner.getValue().get(Owner.Fields.NAME.name()))
-        || o.getValue().containsValue(owner.getValue().get(Owner.Fields.EMAIL.name()))
-    );
+    return this.owners.stream().anyMatch(o -> o.getValue().containsValue(owner.getValue().get(Owner.Fields.NAME.name())) || o.getValue().containsValue(owner.getValue().get(Owner.Fields.EMAIL.name())));
   }
 }
