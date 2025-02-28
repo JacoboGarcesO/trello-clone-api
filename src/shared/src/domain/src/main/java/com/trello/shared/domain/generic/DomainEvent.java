@@ -1,29 +1,32 @@
 package com.trello.shared.domain.generic;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public abstract class DomainEvent implements Serializable {
-  public final Instant when;
-  public final UUID uuid;
-  public final String type;
+  private LocalDateTime when;
+  private String uuid;
+  private String type;
   private String aggregateRootId;
   private String aggregateName;
   private Long version;
 
+  protected DomainEvent() {
+  }
+
   protected DomainEvent(final String type){
     this.type = type;
-    this.when = Instant.now();
-    this.uuid = UUID.randomUUID();
+    this.when = LocalDateTime.now();
+    this.uuid = UUID.randomUUID().toString();
     this.version = 1L;
   }
 
-  public Instant getWhen() {
+  public LocalDateTime getWhen() {
     return when;
   }
 
-  public UUID getUuid() {
+  public String getUuid() {
     return uuid;
   }
 
@@ -53,5 +56,17 @@ public abstract class DomainEvent implements Serializable {
 
   public void setVersion(Long version) {
     this.version = version;
+  }
+
+  public void setWhen(LocalDateTime when) {
+    this.when = when;
+  }
+
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 }

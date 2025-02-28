@@ -3,8 +3,12 @@ package com.trello.board.application.addcolumn;
 import com.trello.shared.application.generic.Request;
 
 public class AddColumnRequest extends Request {
-  private final String name;
-  private final Integer index;
+  private String name;
+  private Integer index;
+
+  public AddColumnRequest() {
+    super();
+  }
 
   public AddColumnRequest(final String aggregateId, final String name, final Integer index) {
     super(aggregateId);
@@ -18,5 +22,13 @@ public class AddColumnRequest extends Request {
 
   public Integer getIndex() {
     return index;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setIndex(Integer index) {
+    this.index = index;
   }
 }

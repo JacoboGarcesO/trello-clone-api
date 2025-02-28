@@ -1,6 +1,10 @@
 package com.trello.board.domain.values;
 
 public class Validator {
+
+  private Validator() {
+  }
+
   public static void validateMinLength(final String value) {
     if (value.length() < 3) {
       throw new IllegalArgumentException("The value object must be at least 3 characters long");

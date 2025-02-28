@@ -47,7 +47,7 @@ public class BoardHandler extends DomainActionsContainer {
       board.validateColumnsExist();
       board.validateTodoDuplicated(event.getTitle());
 
-      final Todo todo = new Todo(new TodoId(), Name.of(event.getTitle()), Description.of(event.getDescription()), Column.of(board.getColumns().get(0).getValue()));
+      final Todo todo = new Todo(TodoId.of(event.getId()), Name.of(event.getTitle()), Description.of(event.getDescription()), Column.of(board.getColumns().get(0).getValue()));
 
       board.getTodos().add(todo);
     };
@@ -68,7 +68,7 @@ public class BoardHandler extends DomainActionsContainer {
       board.validateColumMatches(event.getColumn());
       final Todo todo = board.getTodo(event.getTodoId());
       board.getTodos().removeIf(t -> t.getIdentity().equals(todo.getIdentity()));
-      final Todo newTodo = new Todo(todo.getIdentity(), todo.getTitle(), todo.getDescription(), Column.of(event.getColumn()));
+      final Todo newTodo = new Todo(todo.getIdentity(), todo.getTitle(), todo.getDescription(), Column.of(event.getColumn()), todo.getOwners());
       board.getTodos().add(newTodo);
     };
   }

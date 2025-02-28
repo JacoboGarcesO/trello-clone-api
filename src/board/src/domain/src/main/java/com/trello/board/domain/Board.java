@@ -2,8 +2,8 @@ package com.trello.board.domain;
 
 import com.trello.board.domain.events.BoardCreated;
 import com.trello.board.domain.events.ColumnAdded;
-import com.trello.board.domain.events.OwnerAdded;
 import com.trello.board.domain.events.ColumnChanged;
+import com.trello.board.domain.events.OwnerAdded;
 import com.trello.board.domain.events.TodoCreated;
 import com.trello.board.domain.values.BoardId;
 import com.trello.board.domain.values.Column;
@@ -12,6 +12,8 @@ import com.trello.board.domain.values.TodoId;
 import com.trello.shared.domain.generic.AggregateRoot;
 import com.trello.shared.domain.generic.DomainEvent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,12 +26,16 @@ public class Board extends AggregateRoot<BoardId> {
   // region Constructors
   public Board(final String name) {
     super(new BoardId());
+    columns = new HashMap<>();
+    todos = new ArrayList<>();
     subscribe(new BoardHandler(this));
     append(new BoardCreated(name)).apply();
   }
 
   private Board(final BoardId identity) {
     super(identity);
+    columns = new HashMap<>();
+    todos = new ArrayList<>();
     subscribe(new BoardHandler(this));
   }
   // endregion
@@ -65,15 +71,15 @@ public class Board extends AggregateRoot<BoardId> {
     append(new ColumnAdded(name, index)).apply();
   }
 
-  public void addTodo(final String title, final String description) {
-    append(new TodoCreated(title, description)).apply();
+  public void addTodo(final String title, final String description, final String id) {
+    append(new TodoCreated(id, title, description)).apply();
   }
 
   public void addOwner(final String name, final String email, final String todoId) {
     append(new OwnerAdded(name, email, todoId)).apply();
   }
 
-  public void changeStatus(final String status, final String todoId) {
+  public void changeColumn(final String status, final String todoId) {
     append(new ColumnChanged(status, todoId)).apply();
   }
   // endregion
@@ -151,6 +157,7 @@ public class Board extends AggregateRoot<BoardId> {
 
     Board board = new Board(BoardId.of(identity));
     events.forEach(event -> board.append(event).apply());
+    board.markEventsAsCommitted();
     return board;
   }
   // endregion

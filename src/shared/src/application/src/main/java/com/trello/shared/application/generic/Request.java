@@ -1,7 +1,10 @@
 package com.trello.shared.application.generic;
 
 public abstract class Request {
-  private final String aggregateId;
+  private String aggregateId;
+
+  protected Request() {
+  }
 
   protected Request(String aggregateId) {
     this.aggregateId = aggregateId;
@@ -9,5 +12,9 @@ public abstract class Request {
 
   public String getAggregateId() {
     return aggregateId;
+  }
+
+  public void setAggregateId(String aggregateId) {
+    this.aggregateId = aggregateId;
   }
 }

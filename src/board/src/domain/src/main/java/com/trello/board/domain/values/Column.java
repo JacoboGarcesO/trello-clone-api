@@ -30,6 +30,4 @@ public class Column implements IValueObject<String> {
     validateMinLength(value);
     return value;
   }
-
-
 }

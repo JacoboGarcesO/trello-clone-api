@@ -7,9 +7,9 @@ public class ColumnChanged extends DomainEvent {
   private final String column;
   private final String todoId;
 
-  public ColumnChanged(final String status, String todoId) {
+  public ColumnChanged(final String column, String todoId) {
     super(EventsEnum.STATUS_CHANGED.name());
-    this.column = status;
+    this.column = column;
     this.todoId = todoId;
   }
 

@@ -156,22 +156,22 @@ class BoardTest {
   }
 
   @Test
-  void changeStatus() {
+  void changeColumn() {
     board.addColumn("To Do", 0);
     board.addColumn("Doing", 1);
     board.addTodo("Test", "Test");
-    board.changeStatus("Doing", board.getTodos().get(0).getIdentity().getValue());
+    board.changeColumn("Doing", board.getTodos().get(0).getIdentity().getValue());
     assertEquals(1, board.getTodos().size());
     assertEquals(5, board.getUncommittedEvents().size());
     assertInstanceOf(ColumnChanged.class, board.getUncommittedEvents().get(4));
   }
 
   @Test
-  void changeStatusIfNotExist() {
+  void changeColumnIfNotExist() {
     board.addColumn("To Do", 0);
     board.addColumn("Doing", 1);
     board.addTodo("Test", "Test");
-    assertThrows(IllegalStateException.class, () -> board.changeStatus("Done", board.getTodos().get(0).getIdentity().getValue()));
+    assertThrows(IllegalStateException.class, () -> board.changeColumn("Done", board.getTodos().get(0).getIdentity().getValue()));
     assertEquals(1, board.getTodos().size());
     assertEquals(5, board.getUncommittedEvents().size());
     assertInstanceOf(ColumnChanged.class, board.getUncommittedEvents().get(4));
@@ -182,7 +182,7 @@ class BoardTest {
     board.addColumn("To Do", 0);
     board.addColumn("Doing", 1);
     board.addTodo("Test", "Test");
-    board.changeStatus("Doing", board.getTodos().get(0).getIdentity().getValue());
+    board.changeColumn("Doing", board.getTodos().get(0).getIdentity().getValue());
     board.markEventsAsCommitted();
     assertEquals(0, board.getUncommittedEvents().size());
   }

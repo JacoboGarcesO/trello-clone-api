@@ -3,7 +3,11 @@ package com.trello.board.application.createboard;
 import com.trello.shared.application.generic.Request;
 
 public class CreateBoardRequest extends Request {
-  private final String name;
+  private String name;
+
+  public CreateBoardRequest() {
+    super();
+  }
 
   public CreateBoardRequest(String name) {
     super(null);
@@ -12,5 +16,9 @@ public class CreateBoardRequest extends Request {
 
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

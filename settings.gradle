@@ -2,13 +2,14 @@ rootProject.name = 'trello-clone-api'
 
 include ':board:application'
 include ':board:domain'
+include ':board:service'
+include ':board:mongo-adapter'
 include ':shared:domain'
 include ':shared:application'
 
-
 project(':board:application').projectDir = file('./src/board/src/application')
+project(':board:mongo-adapter').projectDir = file('./src/board/src/infrastructure/driven/mongo-adapter')
 project(':board:domain').projectDir = file('./src/board/src/domain')
 project(':shared:domain').projectDir = file('./src/shared/src/domain')
 project(':shared:application').projectDir = file('./src/shared/src/application')
-
-
+project(':board:service').projectDir = file('./src/board/src/infrastructure/driving/service')

@@ -1,6 +1,9 @@
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    implementation 'io.projectreactor:reactor-core:3.6.8'
+    implementation 'io.projectreactor:reactor-test:3.6.8'
     implementation(project(':board:domain'))
     implementation(project(':shared:application'))
     implementation(project(':shared:domain'))
